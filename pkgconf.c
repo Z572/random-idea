@@ -137,6 +137,15 @@ SCM_DEFINE(gpkgconf_pkg_find, "%pc:package-find", 2, 0, 0, (SCM c, SCM name),
   return SCM_BOOL_F;
 }
 
+SCM_DEFINE(gpkgconf_pkgref_name, "%pc:package-name", 1, 0, 0, (SCM spkg),
+                  "") {
+  scm_assert_foreign_object_type(gpkgconf_pkgref_t, spkg);
+  pkgref *pkgref=foreign_object_ref(spkg);
+  scm_remember_upto_here_1(spkg);
+  char *str=pkgref-> pkg->id;
+  return str? scm_from_utf8_string(str) : SCM_BOOL_F;
+}
+
 void init_pkgconf() {
   scm_c_define_gsubr("%set-pc:client-type",0,0,0, (scm_t_subr) set_pc_client_type);
 #ifndef SCM_MAGIC_SNARFER

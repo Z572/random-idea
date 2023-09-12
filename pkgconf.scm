@@ -38,3 +38,8 @@
 (define (pc:package-find client name)
   (assert (string? name))
   (%pc:package-find client name))
+(define-method (write (pkg <pc:package>) port)
+  (format port "#<~a ~a ~x>"
+          (class-name (class-of pkg))
+          (%pc:package-name pkg)
+          (object-address pkg)))
