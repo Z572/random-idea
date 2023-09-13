@@ -3,6 +3,9 @@
 #include "guile_mlir.hpp"
 #include <scm/scm.hpp>
 #include <mlir/IR/Types.h>
+#include "libguile/modules.h"
+#include "libguile/numbers.h"
+#include "libguile/scm.h"
 #include "mlir/Dialect/Affine/Passes.h"
 #include "mlir/Dialect/Affine/Passes.h"
 #include "mlir/ExecutionEngine/ExecutionEngine.h"
@@ -53,11 +56,19 @@ void func()
 static cl::opt<bool> enbac("opt",cl::desc("Enable optimizations"));
 
 extern "C" void init_immer() {
+  mlir::MLIRContext context;
   scm::type<mm>("mlir")
     .constructor()
     .define("get", &mm::get);
 
-    scm::group()
-      .define("registerAsmPrinterCLOptions", &mlir::registerAsmPrinterCLOptions)
-        .define("func1", func<1>);
+    scm::group("mlir")
+      .define("registerAsmPrinterCLOptions",&mlir::registerAsmPrinterCLOptions)
+      .define("func1", func<1>)
+      .define("ParseCommandLineOptions", [](
+                                            scm::val argc,
+                                            scm::val argv,
+                                            scm::args usedouble){
+
+        return 1;
+});
 }
