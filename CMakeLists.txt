@@ -31,7 +31,7 @@ add_definitions(${LLVM_DEFINITIONS})
 
 # Now build our tools
 add_library(guile-mlir SHARED ${SOURCE_FILES})
-
+include_directories(include)
 
 include(HandleLLVMOptions)
 # Find the libraries that correspond to the LLVM components
@@ -40,4 +40,9 @@ llvm_map_components_to_libnames(llvm_libs support core irreader orcjit native)
 
 # Link against LLVM libraries
 target_include_directories(guile-mlir PUBLIC ${LLVM_INCLUDE_DIRS} ${GUILE3_INCLUDE_DIRS}  ${MLIR_INCLUDE_DIRS})
-target_link_libraries(guile-mlir PUBLIC ${llvm_libs} ${GUILE3_LIBRARIES} MLIRIR)
+target_link_libraries(guile-mlir PUBLIC ${llvm_libs} ${GUILE3_LIBRARIES}
+    MLIRAnalysis
+    MLIRIR
+    MLIRParser
+    MLIRSideEffectInterfaces
+    MLIRTransforms)
