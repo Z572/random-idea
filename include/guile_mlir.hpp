@@ -12,20 +12,3 @@
       #define GUILE_MLIR_PUBLIC
   #endif
 #endif
-
-namespace guile_mlir {
-
-class GUILE_MLIR_PUBLIC Guile_mlir {
-
-public:
-  Guile_mlir();
-  int get_number() const;
-
-private:
-
-  int number;
-
-};
-
-}
-

@@ -1,4 +1,3 @@
-#include <guile_mlir.hpp>
 #include <iostream>
 
 int main(int argc, char **argv) {
@@ -6,6 +5,6 @@ int main(int argc, char **argv) {
         std::cout << argv[0] << " takes no arguments.\n";
         return 1;
     }
-    guile_mlir::Guile_mlir c;
-    return c.get_number() != 6;
+
+    return 1;
 }

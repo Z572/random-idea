@@ -46,3 +46,4 @@ target_link_libraries(guile-mlir PUBLIC ${llvm_libs} ${GUILE3_LIBRARIES}
     MLIRParser
     MLIRSideEffectInterfaces
     MLIRTransforms)
+add_executable(guile-mlir-test guile_mlir_test.cpp)
