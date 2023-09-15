@@ -6,6 +6,7 @@
 #include "mlir/IR/AsmState.h"
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/MLIRContext.h"
+#include "mlir/IR/BuiltinDialect.h"
 #include "mlir/IR/Verifier.h"
 #include "mlir/InitAllDialects.h"
 #include "mlir/Parser/Parser.h"
@@ -32,17 +33,38 @@ namespace scm {
   }
 }
 
-extern "C" void init_immer() {
+extern "C" void init_mlir() {
   scm::type<mlir::DialectRegistry>("mlir-dialect-registry")
     .constructor()
     .finalizer();
-
+  scm::type<llvm::SMLoc>("llvm-smloc")
+    .constructor();
+  scm::type<mlir::Dialect>("mlir-dialect")
+    .define("get-namespace", &mlir::Dialect::getNamespace)
+    .define("allows-unknown-operations",
+            &mlir::Dialect::allowsUnknownOperations);
+  scm::type<mlir::BuiltinDialect>("mlir-builtin-dialect")
+    .finalizer();
+  scm::type<mlir::Type>("mlir-type")
+    .define("is-F128?", &mlir::Type::isF128);
+  scm::type<mlir::Block>("mlir-block")
+    .define("is-entry-block?", &mlir::Block::isEntryBlock);
+  scm::type<mlir::OpBuilder>("mlir-opbuilder");
+  scm::type<mlir::OpState>("mlir-opstate")
+    .define("use-empty?", &mlir::OpState::use_empty);
   scm::type<mlir::MLIRContext>("mlir-context")
-    .constructor()
-    .finalizer()
-    .define("load-all-available-dialects", &mlir::MLIRContext::loadAllAvailableDialects)
-    .define("allows-unregistered-dialects", &mlir::MLIRContext::allowsUnregisteredDialects);
-  ;
-  ;
+      .maker()
+      .finalizer()
+      .define("load-all-available-dialects",
+              &mlir::MLIRContext::loadAllAvailableDialects)
+      .define("allows-unregistered-dialects",
+              &mlir::MLIRContext::allowsUnregisteredDialects)
+      .define("append-dialect-registry",
+              [](mlir::MLIRContext &self, mlir::DialectRegistry &o) {
+                self.appendDialectRegistry(o);
+              })
+    .define("operation-registered?", [](mlir::MLIRContext &self, scm::val str) {
+      return self.isOperationRegistered(llvm::StringRef(scm_to_utf8_string(str)));
+    });
 
 }
