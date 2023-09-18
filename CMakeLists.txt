@@ -14,7 +14,7 @@ find_package(LLVM REQUIRED CONFIG)
 find_package(MLIR REQUIRED CONFIG)
 find_package(Schmutz REQUIRED)
 pkg_check_modules(GUILE3 REQUIRED guile-3.0)
-set(SOURCE_FILES guile_mlir.cpp)
+set(SOURCE_FILES guile_mlir.cpp dialect.cpp)
 include(TableGen)
 include(AddLLVM)
 
